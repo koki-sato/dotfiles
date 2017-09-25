@@ -1,0 +1,21 @@
+[color]
+	branch      = auto
+	diff        = auto
+	grep        = auto
+	interactive = auto
+	status      = auto
+	ui          = auto
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore_global
+[user]
+	name = Koki Sato
+	email = s.4115.koki@gmail.com
+[github]
+	user = koki-sato
+[push]
+	defalut = current
+[rebase]
+	autosquash = true
+[include]
+	path = ~/.gitconfig.local
