@@ -23,7 +23,7 @@ export LSCOLORS=gxfxcxdxbxegedabagacad
 # エイリアス
 alias ls='ls -G'
 alias la='ls -aG'
-alias ll='ls -alhG'
+alias ll='ls -alhTG'
 alias vi='vim'
 alias tmux='tmux -u'
 alias catpy='pygmentize -O style=monokai -f console256 -g'

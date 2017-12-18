@@ -1,9 +1,8 @@
-# パス
 export PATH=/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin
-export PATH="$HOME/.anyenv/bin:$PATH"
 
-# env初期化
-eval "$(anyenv init -)"
+if [ -d $HOME/.anyenv ]; then
+  export PATH="$HOME/.anyenv/bin:$PATH"
+  eval "$(anyenv init - zsh)"
+fi
 
-# 環境変数
 export PYTHONDONTWRITEBYTECODE=True

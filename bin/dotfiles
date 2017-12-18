@@ -2,14 +2,15 @@
 
 set -eu
 
-export DOTFILES_ROOT="$HOME/dotfiles"
+readonly DOTFILES_ROOT="$HOME/dotfiles"
+readonly DOTFILES="dotfiles"
 
 #===========================================================================#
 # common functions
 #===========================================================================#
 
 print() {
-  printf "\e[4mdotfiles\e[0m: "
+  printf "\e[4m$DOTFILES\e[0m: "
   echo "$@"
 }
 
@@ -28,8 +29,14 @@ subcommand_exists() {
   grep -q "^cmd_$cmd(" "$DOTFILES_ROOT/bin/dotfiles"
 }
 
+warning() {
+  printf "\e[4m$DOTFILES\e[0m: \e[33m[Warning] "
+  echo "$@"
+  printf "\e[0m"
+}
+
 #===========================================================================#
-# command functions
+# commands
 #===========================================================================#
 
 cmd_setup-osx() {
@@ -44,17 +51,24 @@ cmd_setup-osx() {
   cmd_exec brew bundle --verbose
 
   # Install anyenv
-  cmd_exec git clone https://github.com/riywo/anyenv ~/.anyenv
-  # Init anyenv
-  export PATH="$HOME/.anyenv/bin:$PATH"
-  eval "$(anyenv init -)"
-  cmd_exec anyenv install rbenv
-  cmd_exec anyenv install pyenv
+  if ! command_exist anyenv; then
+    cmd_exec git clone https://github.com/riywo/anyenv ~/.anyenv
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    eval "$(anyenv init -)"
+  fi
+  ! command_exist rbenv  && cmd_exec anyenv install rbenv
+  ! command_exist pyenv  && cmd_exec anyenv install pyenv
+  ! command_exist nodenv && cmd_exec anyenv install nodenv
 
   # Setup Atom
+  # See also https://gist.github.com/koki-sato/6e4dbcc200f57098026d4cfa6bf02bcd
   if ! command_exist apm; then
     cmd_exec apm install sync-settings
   fi
+}
+
+cmd_setup-linux() {
+  :
 }
 
 cmd_link() {
@@ -64,16 +78,49 @@ cmd_link() {
     local file_dotfiles="$DOTFILES_ROOT/home/$filename"
     local file_home="$HOME/$filename"
 
-    if [[ -e $file_home ]]; then
-      if [[ ! -L $file_home ]]; then
-        print "Warning: $file_home exists but is not a symlink."
-      fi
-    else
+    print
+    if [[ ! -e $file_home ]]; then
       print "Creating symlink at $file_home"
       cmd_exec ln -s "$file_dotfiles" "$file_home"
+    else
+      if [[ -L $file_home ]]; then
+        warning "symlink $file_home already exists."
+      else
+        warning "$file_home already exists but is not a symlink."
+      fi
+      while true; do
+        print -n "Do you want to overwrite it? [Y/n] "
+        read answer
+        case "$answer" in
+          [yY])
+            print "Creating symlink at $file_home"
+            cmd_exec ln -sf "$file_dotfiles" "$file_home"
+            break
+            ;;
+          [nN])
+            break
+            ;;
+        esac
+      done
     fi
   done
 }
+
+cmd_help() {
+  echo "Script for dotfiles"
+  echo
+  echo "Usage:"
+  echo "    bin/dotfiles [COMMAND] [ARGS...]"
+  echo
+  echo "Commands:"
+  echo "    setup-osx    Setup macOS"
+  echo "    setup-linux  Setup Linux"
+  echo "    link         Link dotfiles"
+}
+
+# aliases
+cmd_-h() { cmd_help; }
+cmd_--help() { cmd_help; }
 
 #===========================================================================#
 
