@@ -55,6 +55,8 @@ cmd_setup-osx() {
     cmd_exec git clone https://github.com/riywo/anyenv ~/.anyenv
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init -)"
+    mkdir -p $(anyenv root)/plugins
+    git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
   fi
   ! command_exist rbenv  && cmd_exec anyenv install rbenv
   ! command_exist pyenv  && cmd_exec anyenv install pyenv
