@@ -68,3 +68,14 @@ zstyle ':vcs_info:*' formats ' (*%F{green}%b%f)'
 zstyle ':vcs_info:*' actionformats ' (*%F{green}%b%f(%F{red}%a%f))'
 precmd () { vcs_info }
 RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+
+# History search with peco
+if which peco &> /dev/null; then
+  function peco-select-history {
+      BUFFER=`history -n -r 1 | peco --query "$LBUFFER"`
+      CURSOR=$#BUFFER
+      zle reset-prompt
+  }
+  zle -N peco-select-history
+  bindkey '^r' peco-select-history
+fi
