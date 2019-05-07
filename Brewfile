@@ -1,5 +1,5 @@
 brew 'git'
-brew 'zsh', args: ['without-etcdir']
+brew 'zsh'
 brew 'zsh-completions'
 
 cask 'atom'

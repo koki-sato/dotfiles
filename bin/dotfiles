@@ -42,6 +42,9 @@ warning() {
 cmd_setup-osx() {
   cmd_exec cd $DOTFILES_ROOT
 
+  # Link dotfiles command to $PATH
+  cmd_exec ln -s $DOTFILES_ROOT/bin/dotfiles /usr/local/bin/dotfiles
+
   # Install Homebrew
   if ! command_exist brew; then
     cmd_exec /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
