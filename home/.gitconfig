@@ -14,6 +14,8 @@
   signingkey = s.4115.koki@gmail.com
 [github]
   user = koki-sato
+[commit]
+  gpgsign = true
 [push]
   defalut = current
 [rebase]
