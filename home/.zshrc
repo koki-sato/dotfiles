@@ -89,3 +89,8 @@ if which peco &> /dev/null; then
   zle -N peco-select-history
   bindkey '^r' peco-select-history
 fi
+
+# Local settings
+if [ -e ~/.zshrc.local ]; then
+  source ~/.zshrc.local
+fi
