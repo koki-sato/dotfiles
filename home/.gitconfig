@@ -1,24 +1,24 @@
 [color]
-  branch      = auto
-  diff        = auto
-  grep        = auto
-  interactive = auto
-  status      = auto
-  ui          = auto
+	branch      = auto
+	diff        = auto
+	grep        = auto
+	interactive = auto
+	status      = auto
+	ui          = auto
 [core]
-  editor = vim
-  excludesfile = ~/.gitignore_global
+	editor = vim
+	excludesfile = ~/.gitignore_global
 [user]
-  name = Koki Sato
-  email = s.4115.koki@gmail.com
-  signingkey = s.4115.koki@gmail.com
+	name = koki-sato
+	email = admin@koki-sato.com
+	signingkey = admin@koki-sato.com
 [github]
-  user = koki-sato
+	user = koki-sato
 [commit]
-  gpgsign = true
+	gpgsign = true
 [push]
-  defalut = current
+	defalut = current
 [rebase]
-  autosquash = true
+	autosquash = true
 [include]
-  path = ~/.gitconfig.local
+	path = ~/.gitconfig.local
