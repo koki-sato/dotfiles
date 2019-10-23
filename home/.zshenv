@@ -19,6 +19,11 @@ if [ -d $HOME/.anyenv ]; then
   done
 fi
 
+# Rust
+if [ -d $HOME/.cargo ]; then
+  export PATH=$HOME/.cargo/bin:$PATH
+fi
+
 # direnv
 if type "direnv" > /dev/null 2>&1; then
   eval "$(direnv hook zsh)"
