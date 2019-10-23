@@ -9,6 +9,11 @@ export HISTSIZE=10000
 export HISTFILESIZE=100000
 export HISTCONTROL=ignoreboth
 
+# Alias
+alias vi='vim'
+alias tmux='tmux -u'
+alias catpy='pygmentize -O style=monokai -f console256 -g'
+
 # ls
 if [ "$(uname)" = 'Darwin' ]; then
   export LSCOLORS=gxfxcxdxbxegedabagacad
@@ -24,10 +29,25 @@ else
   alias ll='ls -alh'
 fi
 
-# Alias
-alias vi='vim'
-alias tmux='tmux -u'
-alias catpy='pygmentize -O style=monokai -f console256 -g'
+# diff
+if which colordiff &> /dev/null; then
+  alias diff='colordiff -u'
+else
+  alias diff='diff -u'
+fi
+
+# grc
+if which grc &> /dev/null; then
+  alias ifconfig='grc ifconfig'
+  alias dig='grc dig'
+  alias ping='grc ping'
+  alias ping6='grc ping6'
+  alias traceroute='grc traceroute'
+  alias traceroute6='grc traceroute6'
+fi
+
+# less
+export LESS='-iMR'
 
 # Disable C-s and C-q
 stty stop undef
