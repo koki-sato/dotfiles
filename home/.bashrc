@@ -55,3 +55,18 @@ stty start undef
 
 # Prompt
 export PS1='\[\033[01;32m\]\u@\H\[\033[01;34m\] \W \$ \[\033[00m\]'
+
+# anyenv
+if [ -d $HOME/.anyenv ]; then
+  export PATH="$HOME/.anyenv/bin:$PATH"
+  eval "$(anyenv init -)"
+
+  for D in `ls $HOME/.anyenv/envs`; do
+    export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
+  done
+fi
+
+# direnv
+if type "direnv" > /dev/null 2>&1; then
+  eval "$(direnv hook bash)"
+fi
