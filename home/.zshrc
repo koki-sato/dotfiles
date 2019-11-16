@@ -99,6 +99,21 @@ zstyle ':vcs_info:*' actionformats ' (*%F{green}%b%f(%F{red}%a%f))'
 precmd () { vcs_info }
 RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 
+# anyenv
+if [ -d $HOME/.anyenv ]; then
+  export PATH="$HOME/.anyenv/bin:$PATH"
+  eval "$(anyenv init - zsh)"
+
+  for D in `ls $HOME/.anyenv/envs`; do
+    export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
+  done
+fi
+
+# direnv
+if type "direnv" > /dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
 # History search with peco
 if which peco &> /dev/null; then
   function peco-select-history {
