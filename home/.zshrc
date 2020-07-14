@@ -61,6 +61,15 @@ fi
 # less
 export LESS='-iMR'
 
+# SSH
+if which ssh-host-color &> /dev/null; then
+  alias ssh='ssh-host-color'
+else
+  if [ -e ~/bin/ssh-host-color ]; then
+    alias ssh='~/bin/ssh-host-color'
+  fi
+fi
+
 # Disable C-s and C-q
 stty stop undef
 stty start undef
