@@ -111,7 +111,7 @@ RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 # anyenv
 if [ -d $HOME/.anyenv ]; then
   export PATH="$HOME/.anyenv/bin:$PATH"
-  eval "$(anyenv init - zsh)"
+  eval "$(anyenv init - --no-rehash)"
 
   for D in `ls $HOME/.anyenv/envs`; do
     export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
@@ -121,6 +121,12 @@ fi
 # direnv
 if type "direnv" > /dev/null 2>&1; then
   eval "$(direnv hook zsh)"
+fi
+
+# asdf
+if [ -e /usr/local/opt/asdf/asdf.sh ]; then
+  # Do not use `. $(brew --prefix asdf)/asdf.sh` due to performance issues.
+  . /usr/local/opt/asdf/asdf.sh
 fi
 
 # History search with peco
