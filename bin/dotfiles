@@ -10,29 +10,29 @@ readonly DOTFILES="dotfiles"
 ########################################################################
 
 print() {
-  printf "\e[4m$DOTFILES\e[0m: "
-  echo "$@"
+    printf "\e[4m$DOTFILES\e[0m: "
+    echo "$@"
 }
 
 cmd_exec() {
-  print "$@"
-  "$@"
+    print "$@"
+    "$@"
 }
 
 command_exist() {
-  which "$1" >/dev/null 2>&1
-  return $?
+    which "$1" >/dev/null 2>&1
+    return $?
 }
 
 subcommand_exists() {
-  local cmd=$1
-  grep -q "^cmd_$cmd(" "$DOTFILES_ROOT/bin/dotfiles"
+    local cmd=$1
+    grep -q "^cmd_$cmd(" "$DOTFILES_ROOT/bin/dotfiles"
 }
 
 warning() {
-  printf "\e[4m$DOTFILES\e[0m: \e[33m[Warning] "
-  echo "$@"
-  printf "\e[0m"
+    printf "\e[4m$DOTFILES\e[0m: \e[33m[Warning] "
+    echo "$@"
+    printf "\e[0m"
 }
 
 ########################################################################
@@ -40,87 +40,89 @@ warning() {
 ########################################################################
 
 cmd_setup-osx() {
-  cmd_exec cd $DOTFILES_ROOT
+    cmd_exec cd $DOTFILES_ROOT
 
-  # Link dotfiles command to $PATH
-  cmd_exec ln -s $DOTFILES_ROOT/bin/dotfiles /usr/local/bin/dotfiles
+    # Install Homebrew
+    if ! command_exist brew; then
+        cmd_exec /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
 
-  # Install Homebrew
-  if ! command_exist brew; then
-    cmd_exec /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  fi
+    # Install all dependencies in a Brewfile.
+    cmd_exec brew bundle --verbose
 
-  # Install all dependencies in a Brewfile.
-  cmd_exec brew bundle --verbose
+    # Link dotfiles command to $PATH
+    if [[ -d /usr/local/bin ]]; then
+        cmd_exec ln -sf $DOTFILES_ROOT/bin/dotfiles /usr/local/bin/dotfiles
+    fi
 
-  # Install anyenv
-  if ! command_exist anyenv; then
-    cmd_exec git clone https://github.com/riywo/anyenv ~/.anyenv
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    eval "$(anyenv init -)"
-    mkdir -p $(anyenv root)/plugins
-    git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
-  fi
-  ! command_exist rbenv  && cmd_exec anyenv install rbenv
-  ! command_exist pyenv  && cmd_exec anyenv install pyenv
-  ! command_exist nodenv && cmd_exec anyenv install nodenv
+    # Install anyenv
+    if ! command_exist anyenv; then
+        cmd_exec git clone https://github.com/riywo/anyenv ~/.anyenv
+        export PATH="$HOME/.anyenv/bin:$PATH"
+        eval "$(anyenv init -)"
+        mkdir -p $(anyenv root)/plugins
+        git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
+    fi
+    ! command_exist rbenv  && cmd_exec anyenv install rbenv
+    ! command_exist pyenv  && cmd_exec anyenv install pyenv
+    ! command_exist nodenv && cmd_exec anyenv install nodenv
 
-  # Setup Atom
-  # See also https://gist.github.com/koki-sato/6e4dbcc200f57098026d4cfa6bf02bcd
-  if ! command_exist apm; then
-    cmd_exec apm install sync-settings
-  fi
+    # Setup Atom
+    # See also https://gist.github.com/koki-sato/6e4dbcc200f57098026d4cfa6bf02bcd
+    if ! command_exist apm; then
+        cmd_exec apm install sync-settings
+    fi
 }
 
 cmd_setup-linux() {
-  :
+    :
 }
 
 cmd_link() {
-  cmd_exec cd "$DOTFILES_ROOT/home"
+    cmd_exec cd "$DOTFILES_ROOT/home"
 
-  for filename in .??*; do
-    local file_dotfiles="$DOTFILES_ROOT/home/$filename"
-    local file_home="$HOME/$filename"
+    for filename in .??*; do
+        local file_dotfiles="$DOTFILES_ROOT/home/$filename"
+        local file_home="$HOME/$filename"
 
-    print
-    if [[ ! -e $file_home ]]; then
-      print "Creating symlink at $file_home"
-      cmd_exec ln -s "$file_dotfiles" "$file_home"
-    else
-      if [[ -L $file_home ]]; then
-        warning "symlink $file_home already exists."
-      else
-        warning "$file_home already exists but is not a symlink."
-      fi
-      while true; do
-        print -n "Do you want to overwrite it? [Y/n] "
-        read answer
-        case "$answer" in
-          [yY])
+        print
+        if [[ ! -e $file_home ]]; then
             print "Creating symlink at $file_home"
-            cmd_exec ln -sf "$file_dotfiles" "$file_home"
-            break
-            ;;
-          [nN])
-            break
-            ;;
-        esac
-      done
-    fi
-  done
+            cmd_exec ln -s "$file_dotfiles" "$file_home"
+        else
+            if [[ -L $file_home ]]; then
+                warning "symlink $file_home already exists."
+            else
+                warning "$file_home already exists but is not a symlink."
+            fi
+            while true; do
+                print -n "Do you want to overwrite it? [Y/n] "
+                read answer
+                case "$answer" in
+                    [yY])
+                        print "Creating symlink at $file_home"
+                        cmd_exec ln -sf "$file_dotfiles" "$file_home"
+                        break
+                        ;;
+                    [nN])
+                        break
+                        ;;
+                esac
+            done
+        fi
+    done
 }
 
 cmd_help() {
-  echo "Script for dotfiles"
-  echo
-  echo "Usage:"
-  echo "    bin/dotfiles [COMMAND] [ARGS...]"
-  echo
-  echo "Commands:"
-  echo "    setup-osx    Setup macOS"
-  echo "    setup-linux  Setup Linux"
-  echo "    link         Link dotfiles"
+    echo "Script for dotfiles"
+    echo
+    echo "Usage:"
+    echo "    bin/dotfiles [COMMAND] [ARGS...]"
+    echo
+    echo "Commands:"
+    echo "    setup-osx    Setup macOS"
+    echo "    setup-linux  Setup Linux"
+    echo "    link         Link dotfiles"
 }
 
 # aliases
@@ -130,15 +132,15 @@ cmd_--help() { cmd_help; }
 ########################################################################
 
 main() {
-  local cmd=$1
-  shift
+    local cmd=$1
+    shift
 
-  if subcommand_exists "$cmd"; then
-    "cmd_$cmd" "$@"
-  else
-    echo "ERROR: '$cmd' is not a dotfiles command."
-    exit 1
-  fi
+    if subcommand_exists "$cmd"; then
+        "cmd_$cmd" "$@"
+    else
+        echo "ERROR: '$cmd' is not a dotfiles command."
+        exit 1
+    fi
 }
 
 main "$@"
