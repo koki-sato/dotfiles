@@ -15,7 +15,7 @@
 [github]
 	user = koki-sato
 [commit]
-	gpgsign = true
+	gpgsign = false
 [push]
 	default = current
 [rebase]
