@@ -1,2 +1,4 @@
 iterm2/*
 !iterm2/.keep
+
+brewfile.lock.json
