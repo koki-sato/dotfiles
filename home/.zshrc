@@ -109,8 +109,7 @@ precmd () { vcs_info }
 RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 
 # anyenv
-if [ -d $HOME/.anyenv ]; then
-  export PATH="$HOME/.anyenv/bin:$PATH"
+if type "anyenv" > /dev/null 2>&1; then
   eval "$(anyenv init - --no-rehash)"
 
   for D in `ls $HOME/.anyenv/envs`; do
