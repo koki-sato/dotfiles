@@ -61,6 +61,11 @@ fi
 # less
 export LESS='-iMR'
 
+# Kubernetes
+alias k='kubectl'
+alias kns='kubens'
+alias kctx='kubectx'
+
 # SSH
 if which ssh-host-color &> /dev/null; then
   alias ssh='ssh-host-color'
@@ -111,10 +116,6 @@ RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 # anyenv
 if type "anyenv" > /dev/null 2>&1; then
   eval "$(anyenv init - --no-rehash)"
-
-  for D in `ls $HOME/.anyenv/envs`; do
-    export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
-  done
 fi
 
 # direnv
@@ -126,6 +127,14 @@ fi
 if [ -e /usr/local/opt/asdf/asdf.sh ]; then
   # Do not use `. $(brew --prefix asdf)/asdf.sh` due to performance issues.
   . /usr/local/opt/asdf/asdf.sh
+elif [ -e /opt/homebrew/opt/asdf/asdf.sh ]; then
+  # Do not use `. $(brew --prefix asdf)/asdf.sh` due to performance issues.
+  . /opt/homebrew/opt/asdf/asdf.sh
+fi
+
+# npm global bin
+if type "npm" > /dev/null 2>&1; then
+  export PATH=$PATH:`npm bin -g`
 fi
 
 # History search with peco
@@ -136,6 +145,7 @@ if which peco &> /dev/null; then
     zle reset-prompt
   }
   zle -N peco-select-history
+  bindkey -e
   bindkey '^r' peco-select-history
 fi
 
