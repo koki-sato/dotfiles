@@ -12,7 +12,7 @@ set bell-style none; setopt nobeep; setopt nolistbeep  # No beep
 # History
 export HISTFILE=${HOME}/.zsh-history
 export HISTSIZE=10000         # Number of saved history on memory
-export SAVEHIST=100000        # Number of saved history
+export SAVEHIST=1000000       # Number of saved history
 
 setopt hist_ignore_dups       # Ignore duplicated history
 setopt hist_ignore_space      # Ignore command starts with white spaces
@@ -20,6 +20,11 @@ setopt hist_no_store          # Ignore history command
 setopt hist_reduce_blanks     # Strip white spaces
 setopt share_history          # Share history across multi processes
 setopt extended_history       # Save timestamp
+
+# Homebrew
+if [ -e /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # Alias
 alias vi='vim'
@@ -124,12 +129,24 @@ if type "direnv" > /dev/null 2>&1; then
 fi
 
 # asdf
-if [ -e /usr/local/opt/asdf/asdf.sh ]; then
-  # Do not use `. $(brew --prefix asdf)/asdf.sh` due to performance issues.
-  . /usr/local/opt/asdf/asdf.sh
-elif [ -e /opt/homebrew/opt/asdf/asdf.sh ]; then
-  # Do not use `. $(brew --prefix asdf)/asdf.sh` due to performance issues.
-  . /opt/homebrew/opt/asdf/asdf.sh
+# Do not use `. $(brew --prefix asdf)/libexec/asdf.sh` due to performance issues.
+if [ -e /usr/local/opt/asdf/libexec/asdf.sh ]; then
+  # macOS Intel
+  . /usr/local/opt/asdf/libexec/asdf.sh
+elif [ -e /opt/homebrew/opt/asdf/libexec/asdf.sh ]; then
+  # macOS ARM
+  . /opt/homebrew/opt/asdf/libexec/asdf.sh
+fi
+
+# Google Cloud SDK (gcloud)
+if [ -d /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk ]; then
+  # macOS Intel
+  source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+  source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+elif [ -d /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk ]; then
+  # macOS ARM
+  source '/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+  source '/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
 fi
 
 # npm global bin

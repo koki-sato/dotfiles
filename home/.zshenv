@@ -10,15 +10,18 @@ fi
 export PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin
 
 # Go
-export GOPATH=$HOME/go
-export GOBIN=$GOPATH/bin
+if [ -d $HOME/go ]; then
+  export GOPATH=$HOME/go
+  export GOBIN=$GOPATH/bin
+  export PATH=$GOBIN:$PATH
+fi
 
 # Rust
 if [ -d $HOME/.cargo ]; then
   export PATH=$HOME/.cargo/bin:$PATH
 fi
 
-export PYTHONDONTWRITEBYTECODE=True
+export PYTHONDONTWRITEBYTECODE=1
 
 # Local settings
 if [ -e ~/.zshenv.local ]; then
