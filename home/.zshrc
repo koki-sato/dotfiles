@@ -151,7 +151,7 @@ fi
 
 # npm global bin
 if type "npm" > /dev/null 2>&1; then
-  export PATH=$PATH:`npm bin -g`
+  export PATH=$PATH:`npm prefix -g`/bin
 fi
 
 # History search with peco
