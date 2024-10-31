@@ -128,6 +128,15 @@ if type "direnv" > /dev/null 2>&1; then
   eval "$(direnv hook zsh)"
 fi
 
+# mise
+if type "mise" > /dev/null 2>&1; then
+  if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+    eval "$(mise activate zsh --shims)"
+  else
+    eval "$(mise activate zsh)"
+  fi
+fi
+
 # asdf
 # Do not use `. $(brew --prefix asdf)/libexec/asdf.sh` due to performance issues.
 if [ -e /usr/local/opt/asdf/libexec/asdf.sh ]; then
