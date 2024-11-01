@@ -40,6 +40,7 @@ cask 'visual-studio-code'
 # brew 'wget'
 # brew 'yq'
 
+# brew 'aquaproj/aqua/aqua'
 # brew 'derailed/k9s/k9s'
 # brew 'hashicorp/tap/terraform'
 # brew 'kayac/tap/ecspresso'

@@ -158,6 +158,11 @@ elif [ -d /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk ]; the
   source '/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
 fi
 
+# aqua
+if type "aqua" > /dev/null 2>&1; then
+  export PATH="$(aqua root-dir)/bin:$PATH"
+fi
+
 # npm global bin
 if type "npm" > /dev/null 2>&1; then
   export PATH=$PATH:`npm prefix -g`/bin
